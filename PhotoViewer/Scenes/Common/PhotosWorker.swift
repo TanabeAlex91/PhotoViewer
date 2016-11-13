@@ -17,9 +17,7 @@ let apiKey = "c72148b6364a09ee78e7868021dd29b4"
 
 class FlickrPhotosWorker {
     
-    let processingQueue = OperationQueue()
-    
-    func searchPhotosForTerm(_ searchTerm: String, completion : @escaping (_ results: FlickrSearchResults?, _ error : NSError?) -> Void){
+    func searchPhotosForTerm(_ searchTerm: String, completion : @escaping (_ results: ViewPhotos.SearchPhotos.SearchResults?, _ error : NSError?) -> Void){
         
         guard let searchURL = flickrSearchURLStringForSearchTerm(searchTerm) else {
             completion(nil, ErrorFactory.createMalformedURLError())
@@ -52,7 +50,7 @@ class FlickrPhotosWorker {
                         flickrPhotos.append(flickrPhoto)
                     }
                     
-                    completion(FlickrSearchResults(searchTerm: searchTerm, searchResults: flickrPhotos), nil)
+                    completion(ViewPhotos.SearchPhotos.SearchResults(searchTerm: searchTerm, resultPhotos: flickrPhotos), nil)
                 } else {
                     completion(nil, ErrorFactory.createServiceError())
                 }

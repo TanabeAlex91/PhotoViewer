@@ -13,7 +13,7 @@ import UIKit
 
 // MARK: - Connect View, Interactor, and Presenter
 
-extension ViewPhotosListViewController: ViewPhotosListPresenterOutput
+extension ViewPhotosViewController: ViewPhotosPresenterOutput
 {
   override func prepare(for segue: UIStoryboardSegue, sender: Any?)
   {
@@ -21,33 +21,33 @@ extension ViewPhotosListViewController: ViewPhotosListPresenterOutput
   }
 }
 
-extension ViewPhotosListInteractor: ViewPhotosListViewControllerOutput
+extension ViewPhotosInteractor: ViewPhotosViewControllerOutput
 {
 }
 
-extension ViewPhotosListPresenter: ViewPhotosListInteractorOutput
+extension ViewPhotosPresenter: ViewPhotosInteractorOutput
 {
 }
 
-class ViewPhotosListConfigurator
+class ViewPhotosConfigurator
 {
   // MARK: - Object lifecycle
   
-  static let sharedInstance = ViewPhotosListConfigurator()
+  static let sharedInstance = ViewPhotosConfigurator()
   
   private init() {}
   
   // MARK: - Configuration
   
-  func configure(viewController: ViewPhotosListViewController)
+  func configure(viewController: ViewPhotosViewController)
   {
-    let router = ViewPhotosListRouter()
+    let router = ViewPhotosRouter()
     router.viewController = viewController
     
-    let presenter = ViewPhotosListPresenter()
+    let presenter = ViewPhotosPresenter()
     presenter.output = viewController
     
-    let interactor = ViewPhotosListInteractor()
+    let interactor = ViewPhotosInteractor()
     interactor.output = presenter
     
     viewController.output = interactor

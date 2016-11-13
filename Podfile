@@ -8,6 +8,7 @@ target 'PhotoViewer' do
   pod 'AlamofireImage', '~> 3.1'
   pod 'AlamofireNetworkActivityIndicator', '~> 2.0'
   pod 'SwiftyJSON'
+  pod 'PKHUD', '~> 4.0'
 end
 
 
