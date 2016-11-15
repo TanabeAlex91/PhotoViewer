@@ -13,6 +13,7 @@ import UIKit
 
 protocol ViewPhotosRouterInput {
     func showAlertForError(_ error: NSError)
+    func showDetailScreenForPhoto(_ photo: Photo)
 }
 
 class ViewPhotosRouter: ViewPhotosRouterInput {
@@ -25,20 +26,10 @@ class ViewPhotosRouter: ViewPhotosRouterInput {
         viewController.present(alertController, animated: true, completion: nil)
     }
     
-    // MARK: - Communication
-    
-    func passDataToNextScene(segue: UIStoryboardSegue) {
-        // NOTE: Teach the router which scenes it can communicate with
-        
-        //    if segue.identifier == "ShowSomewhereScene" {
-        //      passDataToSomewhereScene(segue: segue)
-        //    }
-    }
-    
-    func passDataToSomewhereScene(segue: UIStoryboardSegue) {
-        // NOTE: Teach the router how to pass data to the next scene
-        
-        // let someWhereViewController = segue.destinationViewController as! SomeWhereViewController
-        // someWhereViewController.output.name = viewController.output.name
+    func showDetailScreenForPhoto(_ photo: Photo) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let viewPhotoDetailViewController = storyboard.instantiateViewController(withIdentifier: "ViewPhotoDetailViewController") as! ViewPhotoDetailViewController
+        viewPhotoDetailViewController.displayedPhoto = photo
+        viewController.present(viewPhotoDetailViewController, animated: true, completion: nil)
     }
 }

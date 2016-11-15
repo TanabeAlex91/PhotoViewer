@@ -80,12 +80,18 @@ extension ViewPhotosViewController {
         cell.backgroundColor = UIColor.white
         
         if let imageURL = flickrPhoto.imageURL() {
-            cell.imageView.af_setImage(
-                withURL: imageURL,
-                placeholderImage: nil,
-                filter: nil,
-                imageTransition: .crossDissolve(0.4)
-            )
+            
+            cell.imageView.af_setImage(withURL: imageURL,
+                                       placeholderImage: nil,
+                                       filter: nil,
+                                       imageTransition: .crossDissolve(0.4),
+                                       completion: { (dataResponse) in
+                                        if let imageData = dataResponse.data {
+                                            let image = UIImage(data: imageData)
+                                            ImageCacheManager.sharedInstance.addImage(image!, forIdentifier:flickrPhoto.imageURLString())
+                                        }
+                                        
+            })
         }
         
         return cell
@@ -132,6 +138,12 @@ extension ViewPhotosViewController : UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return sectionInsets.left
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView,
+                                 didSelectItemAt indexPath: IndexPath) {
+        let photo = photoForIndexPath(indexPath)
+        self.router.showDetailScreenForPhoto(photo)
     }
 }
 
