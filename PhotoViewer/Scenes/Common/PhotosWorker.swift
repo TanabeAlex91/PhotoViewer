@@ -17,6 +17,8 @@ let apiKey = "c72148b6364a09ee78e7868021dd29b4"
 
 class FlickrPhotosWorker {
     
+    var currentPage = 0
+    
     func searchPhotosForTerm(_ searchTerm: String, completion : @escaping (_ results: ViewPhotos.SearchPhotos.SearchResults?, _ error : NSError?) -> Void){
         
         guard let searchURL = flickrSearchURLStringForSearchTerm(searchTerm) else {
@@ -35,7 +37,7 @@ class FlickrPhotosWorker {
                 }
                 
                 if status == "ok" {
-                    var flickrPhotos = [FlickrPhoto]()
+                    var photos = [Photo]()
                     
                     for (_,photoJSON):(String, JSON) in resultJSON["photos"]["photo"] {
                         
@@ -46,11 +48,11 @@ class FlickrPhotosWorker {
                                 break
                         }
                         
-                        let flickrPhoto = FlickrPhoto(photoID: photoID, farm: farm, server: server, secret: secret)
-                        flickrPhotos.append(flickrPhoto)
+                        let photo = Photo(photoID: photoID, farm: farm, server: server, secret: secret)
+                        photos.append(photo)
                     }
                     
-                    completion(ViewPhotos.SearchPhotos.SearchResults(searchTerm: searchTerm, resultPhotos: flickrPhotos), nil)
+                    completion(ViewPhotos.SearchPhotos.SearchResults(searchTerm: searchTerm, resultPhotos: photos), nil)
                 } else {
                     completion(nil, ErrorFactory.createServiceError())
                 }
@@ -66,7 +68,7 @@ class FlickrPhotosWorker {
             return nil
         }
         
-        let URLString = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=\(apiKey)&text=\(escapedTerm)&per_page=20&format=json&nojsoncallback=1"
+        let URLString = "https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=\(apiKey)&text=\(escapedTerm)&per_page=20&format=json&nojsoncallback=1&page=\(currentPage)"
         
         return URLString
     }

@@ -28,7 +28,7 @@ struct Photo : Equatable {
     }
     
     func imageURL(_ size:PhotoSize = .thumbnail) -> URL? {
-        return URL(string: "https://farm\(self.farm).staticflickr.com/\(self.server)/\(self.photoID)_\(self.secret)_\(size).jpg")
+        return URL(string: "https://farm\(self.farm).staticflickr.com/\(self.server)/\(self.photoID)_\(self.secret)_\(size.rawValue).jpg")
     }
 }
 

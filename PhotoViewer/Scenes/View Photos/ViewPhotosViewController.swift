@@ -28,8 +28,7 @@ class ViewPhotosViewController: UICollectionViewController
 {
     var output: ViewPhotosViewControllerOutput!
     var router: ViewPhotosRouter!
-    
-    fileprivate let photoCellReuseIdentifier = "PhotoCell"
+
     fileprivate let sectionInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 20.0, right: 10.0)
     fileprivate var searches : [ViewPhotos.SearchPhotos.SearchResults] = []
     fileprivate let photosWorker = FlickrPhotosWorker()
@@ -75,7 +74,7 @@ extension ViewPhotosViewController {
     override func collectionView(_ collectionView: UICollectionView,
                                  cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoCellReuseIdentifier,
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.reuseIdentifier,
                                                       for: indexPath) as! PhotoCell
         let flickrPhoto = photoForIndexPath(indexPath)
         cell.backgroundColor = UIColor.white
@@ -90,6 +89,20 @@ extension ViewPhotosViewController {
         }
         
         return cell
+    }
+    
+    override func collectionView(_ collectionView: UICollectionView,
+                                 viewForSupplementaryElementOfKind kind: String,
+                                 at indexPath: IndexPath) -> UICollectionReusableView {
+        if (kind == UICollectionElementKindSectionHeader) {
+            let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                             withReuseIdentifier: SearchResultsHeaderView.reuseIdentifier,
+                                                                             for: indexPath) as! SearchResultsHeaderView
+            headerView.sectionTitle.text = searches[(indexPath as NSIndexPath).section].searchTerm
+            return headerView
+        }
+        
+        return UICollectionReusableView();
     }
 }
 
