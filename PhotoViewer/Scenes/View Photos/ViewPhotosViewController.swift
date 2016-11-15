@@ -52,7 +52,7 @@ class ViewPhotosViewController: UICollectionViewController
 
 // MARK: - Private
 private extension ViewPhotosViewController {
-    func photoForIndexPath(_ indexPath: IndexPath) -> FlickrPhoto {
+    func photoForIndexPath(_ indexPath: IndexPath) -> Photo {
         let searchResult : ViewPhotos.SearchPhotos.SearchResults = searches[(indexPath as NSIndexPath).section]
         let photo = searchResult.resultPhotos[(indexPath as NSIndexPath).row]
         return photo

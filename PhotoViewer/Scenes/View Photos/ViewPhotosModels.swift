@@ -24,7 +24,9 @@ struct ViewPhotos {
         
         struct SearchResults {
             let searchTerm : String
-            let resultPhotos : [FlickrPhoto]
+            let resultPhotos : [Photo]
         }
     }
 }
+
+
