@@ -29,6 +29,8 @@
 		81DD3AE01DD8B0A5003E55D9 /* ViewPhotosRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DD3ADA1DD8B0A5003E55D9 /* ViewPhotosRouter.swift */; };
 		81DD3AE11DD8B0A5003E55D9 /* ViewPhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DD3ADB1DD8B0A5003E55D9 /* ViewPhotosViewController.swift */; };
 		81DD3AE31DD8C268003E55D9 /* PhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DD3AE21DD8C268003E55D9 /* PhotoCell.swift */; };
+		9719570B1DDC3E9E007D3A13 /* GlobalAppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9719570A1DDC3E9E007D3A13 /* GlobalAppearanceManager.swift */; };
+		9719570D1DDC4087007D3A13 /* UIColorUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9719570C1DDC4087007D3A13 /* UIColorUtilities.swift */; };
 		979337421DDAAB4200FEAFB6 /* PhotosModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979337411DDAAB4200FEAFB6 /* PhotosModel.swift */; };
 		979337441DDADC4E00FEAFB6 /* SearchResultsHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979337431DDADC4E00FEAFB6 /* SearchResultsHeaderView.swift */; };
 /* End PBXBuildFile section */
@@ -58,6 +60,8 @@
 		81DD3ADA1DD8B0A5003E55D9 /* ViewPhotosRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewPhotosRouter.swift; sourceTree = "<group>"; };
 		81DD3ADB1DD8B0A5003E55D9 /* ViewPhotosViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewPhotosViewController.swift; sourceTree = "<group>"; };
 		81DD3AE21DD8C268003E55D9 /* PhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCell.swift; sourceTree = "<group>"; };
+		9719570A1DDC3E9E007D3A13 /* GlobalAppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalAppearanceManager.swift; sourceTree = "<group>"; };
+		9719570C1DDC4087007D3A13 /* UIColorUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorUtilities.swift; sourceTree = "<group>"; };
 		979337411DDAAB4200FEAFB6 /* PhotosModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotosModel.swift; sourceTree = "<group>"; };
 		979337431DDADC4E00FEAFB6 /* SearchResultsHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsHeaderView.swift; sourceTree = "<group>"; };
 		DA8156257DCA15A4292329A1 /* Pods-PhotoViewer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhotoViewer.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhotoViewer/Pods-PhotoViewer.debug.xcconfig"; sourceTree = "<group>"; };
@@ -139,8 +143,8 @@
 			isa = PBXGroup;
 			children = (
 				81DD3ABD1DD82744003E55D9 /* Common */,
-				8123D07A1DDB685B00D97127 /* View Photo Detail */,
 				81DD3AD51DD8B0A5003E55D9 /* View Photos */,
+				8123D07A1DDB685B00D97127 /* View Photo Detail */,
 			);
 			path = Scenes;
 			sourceTree = "<group>";
@@ -196,6 +200,8 @@
 				81DD3AD11DD851C4003E55D9 /* ErrorFactory.swift */,
 				81DD3AD31DD89CFF003E55D9 /* AlertFactory.swift */,
 				8123D0691DDB600C00D97127 /* ImageCacheManager.swift */,
+				9719570A1DDC3E9E007D3A13 /* GlobalAppearanceManager.swift */,
+				9719570C1DDC4087007D3A13 /* UIColorUtilities.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -352,10 +358,12 @@
 				81DD3ABF1DD82760003E55D9 /* PhotosWorker.swift in Sources */,
 				979337441DDADC4E00FEAFB6 /* SearchResultsHeaderView.swift in Sources */,
 				8123D08C1DDB6A4000D97127 /* ViewPhotoDetailModels.swift in Sources */,
+				9719570B1DDC3E9E007D3A13 /* GlobalAppearanceManager.swift in Sources */,
 				81DD3ADF1DD8B0A5003E55D9 /* ViewPhotosPresenter.swift in Sources */,
 				81DD3ADC1DD8B0A5003E55D9 /* ViewPhotosConfigurator.swift in Sources */,
 				81DD3AE11DD8B0A5003E55D9 /* ViewPhotosViewController.swift in Sources */,
 				81DD3AE31DD8C268003E55D9 /* PhotoCell.swift in Sources */,
+				9719570D1DDC4087007D3A13 /* UIColorUtilities.swift in Sources */,
 				8123D06A1DDB600C00D97127 /* ImageCacheManager.swift in Sources */,
 				81DD3AAA1DD75E42003E55D9 /* AppDelegate.swift in Sources */,
 				81DD3AD21DD851C4003E55D9 /* ErrorFactory.swift in Sources */,

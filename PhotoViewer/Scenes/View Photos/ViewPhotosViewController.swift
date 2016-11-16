@@ -17,11 +17,13 @@ protocol ViewPhotosViewControllerInput
 {
     func displayPhotoSearchServiceError(_ error : NSError)
     func displayResultsFromSearch(_ searchResults : ViewPhotos.SearchPhotos.SearchResults)
+    func displayDetailsView(for photo: Photo)
 }
 
 protocol ViewPhotosViewControllerOutput
 {
     func searchPhotosForTerm(request: ViewPhotos.SearchPhotos.Request)
+    func loadSourceImage(for photo: Photo)
 }
 
 class ViewPhotosViewController: UICollectionViewController
@@ -46,6 +48,14 @@ class ViewPhotosViewController: UICollectionViewController
     override func viewDidLoad()
     {
         super.viewDidLoad()
+        
+        self.collectionView?.backgroundColor = UIColor.white
+    }
+    
+    // MARK - IBActions
+    @IBAction func resetSearchTapped(_ sender: UIBarButtonItem) {
+        searches.removeAll()
+        self.collectionView?.reloadData()
     }
 }
 
@@ -81,9 +91,9 @@ extension ViewPhotosViewController {
         
         if let imageURL = flickrPhoto.imageURL() {
             
+            
             cell.imageView.af_setImage(withURL: imageURL,
-                                       placeholderImage: nil,
-                                       filter: nil,
+                                       placeholderImage: UIImage(named: "imagePlaceholder"),
                                        imageTransition: .crossDissolve(0.4),
                                        completion: { (dataResponse) in
                                         if let imageData = dataResponse.data {
@@ -121,7 +131,7 @@ extension ViewPhotosViewController : UICollectionViewDelegateFlowLayout {
         
         let screenSize = UIScreen.main.bounds.size
         let viewMinDimension = min(screenSize.width, screenSize.height)
-        let itemsPerRow : CGFloat = 4.0;
+        let itemsPerRow : CGFloat = 3.0;
         let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
         let availableWidth = viewMinDimension - paddingSpace
         let widthPerItem = availableWidth / itemsPerRow
@@ -143,7 +153,7 @@ extension ViewPhotosViewController : UICollectionViewDelegateFlowLayout {
     override func collectionView(_ collectionView: UICollectionView,
                                  didSelectItemAt indexPath: IndexPath) {
         let photo = photoForIndexPath(indexPath)
-        self.router.showDetailScreenForPhoto(photo)
+        self.output.loadSourceImage(for: photo)
     }
 }
 
@@ -175,6 +185,10 @@ extension ViewPhotosViewController : ViewPhotosViewControllerInput {
         PKHUD.sharedHUD.hide(afterDelay: 1.0)
         self.searches.insert(searchResults, at: 0)
         self.collectionView?.reloadData()
+    }
+    
+    func displayDetailsView(for photo: Photo) {
+        self.router.showDetailScreenForPhoto(photo)
     }
 }
 

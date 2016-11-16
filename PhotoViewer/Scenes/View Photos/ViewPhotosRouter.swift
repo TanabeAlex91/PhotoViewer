@@ -30,6 +30,6 @@ class ViewPhotosRouter: ViewPhotosRouterInput {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let viewPhotoDetailViewController = storyboard.instantiateViewController(withIdentifier: "ViewPhotoDetailViewController") as! ViewPhotoDetailViewController
         viewPhotoDetailViewController.displayedPhoto = photo
-        viewController.present(viewPhotoDetailViewController, animated: true, completion: nil)
+        viewController.navigationController?.pushViewController(viewPhotoDetailViewController, animated: true)
     }
 }

@@ -11,46 +11,125 @@
 
 import UIKit
 
-protocol ViewPhotoDetailViewControllerInput
-{
+protocol ViewPhotoDetailViewControllerInput {
 }
 
-protocol ViewPhotoDetailViewControllerOutput
-{
+protocol ViewPhotoDetailViewControllerOutput {
 }
 
-class ViewPhotoDetailViewController: UIViewController, ViewPhotoDetailViewControllerInput
-{
+class ViewPhotoDetailViewController: UIViewController, ViewPhotoDetailViewControllerInput {
     var output: ViewPhotoDetailViewControllerOutput!
     var router: ViewPhotoDetailRouter!
     
-    var displayedPhoto : Photo?
+    fileprivate var scrollView: UIScrollView!
+    fileprivate var imageView: UIImageView!
+    
+    var photoSourceImage : UIImage!
     
     // MARK: - Object lifecycle
     
-    override func awakeFromNib()
-    {
+    override func awakeFromNib() {
         super.awakeFromNib()
         ViewPhotoDetailConfigurator.sharedInstance.configure(viewController: self)
     }
     
     // MARK: - View lifecycle
     
-    override func viewDidLoad()
-    {
+    override func viewDidLoad() {
         super.viewDidLoad()
-        doSomethingOnLoad()
+        
+        setupViews()
+        setupImage()
+        setZoomScale()
+        updateImagePosition()
+        setupGestureRecognizer()
     }
     
-    // MARK: - Event handling
-    
-    func doSomethingOnLoad()
-    {
+    override func viewWillLayoutSubviews() {
+        setZoomScale()
+        updateImagePosition()
     }
     
     // MARK: - Display logic
     
-    func displaySomething()
-    {
+    func setupViews() {
+        self.imageView = UIImageView(image: self.photoSourceImage)
+        
+        self.scrollView = UIScrollView(frame: self.view.bounds)
+        self.scrollView.delegate = self
+        self.scrollView.backgroundColor = UIColor.cpBeige
+        self.scrollView.contentSize = self.imageView.bounds.size
+        self.scrollView.autoresizingMask = [.flexibleWidth , .flexibleHeight]
+        
+        self.scrollView .addSubview(self.imageView)
+        view.addSubview(self.scrollView)
+    }
+    
+    func setupImage() {
+        if let photo = self.displayedPhoto {
+            if let sourceImage = ImageCacheManager.sharedInstance.fetchImageWithIdentifier(photo.imageURLString(.source)) {
+                self.imageView.image = sourceImage
+            } else {
+                if let thumbnailImage = ImageCacheManager.sharedInstance.fetchImageWithIdentifier(photo.imageURLString()) {
+                    self.imageView.image = thumbnailImage
+                }
+                
+                
+            }
+        }
+    }
+}
+
+// MARK: - UIScrollViewDelegate
+extension ViewPhotoDetailViewController: UIScrollViewDelegate {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return self.imageView
+    }
+    
+    func scrollViewDidZoom(_ scrollView: UIScrollView) {
+        updateImagePosition()
+    }
+}
+
+// MARK: - Private
+extension ViewPhotoDetailViewController {
+    
+    // MARK: - Zoom Handling
+    fileprivate func setZoomScale() {
+        let scrollViewSize = self.scrollView.bounds.size
+        let imageViewSize = self.imageView.bounds.size
+        let widthScale = scrollViewSize.width / imageViewSize.width
+        let heightScale = scrollViewSize.height / imageViewSize.height
+        
+        scrollView.minimumZoomScale = min(widthScale, heightScale)
+        scrollView.zoomScale = 1.0
+    }
+    
+    fileprivate func updateImagePosition() {
+        
+        let imageViewSize = imageView.frame.size
+        let scrollViewSize = scrollView.bounds.size
+        
+        let verticalPadding = imageViewSize.height < scrollViewSize.height ? (scrollViewSize.height - imageViewSize.height) / 2 : 0
+        let horizontalPadding = imageViewSize.width < scrollViewSize.width ? (scrollViewSize.width - imageViewSize.width) / 2 : 0
+        
+        self.scrollView.contentInset = UIEdgeInsets(top: verticalPadding, left: horizontalPadding, bottom: verticalPadding, right: horizontalPadding)
+    }
+    
+    
+    //MARK: - Gesture Handling
+    fileprivate func setupGestureRecognizer() {
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(self.handleDoubleTap(recognizer:)))
+        doubleTap.numberOfTapsRequired = 2
+        self.scrollView.addGestureRecognizer(doubleTap)
+    }
+    
+    @objc fileprivate func handleDoubleTap(recognizer: UITapGestureRecognizer) {
+        
+        if (self.scrollView.zoomScale > self.scrollView.minimumZoomScale) {
+            self.scrollView.setZoomScale(self.scrollView.minimumZoomScale, animated: true)
+        } else {
+            self.scrollView.setZoomScale(self.scrollView.maximumZoomScale, animated: true)
+        }
     }
 }

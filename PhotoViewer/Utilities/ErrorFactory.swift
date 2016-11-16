@@ -11,7 +11,7 @@ import UIKit
 let defaultErrorDomain = "Photo Service Error"
 let defaultErrorCode = 0
 
-class ErrorFactory: NSObject {
+class ErrorFactory {
     static func createErrorWithReason(_ reason: String, description: String) -> NSError {
         let userInfo = [NSLocalizedFailureReasonErrorKey: reason,
                         NSLocalizedDescriptionKey: description]

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AlertFactory: NSObject {
+class AlertFactory {
     static func createAlertWithError(_ error: NSError) -> UIAlertController {
         let alertController = UIAlertController(title: error.localizedFailureReason,
                                                 message: error.localizedDescription,

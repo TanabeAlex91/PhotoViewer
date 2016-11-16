@@ -6,13 +6,14 @@
 //  Copyright © 2016 Alex Tanabe. All rights reserved.
 //
 
-import UIKit
 import AlamofireImage
 
-class ImageCacheManager: NSObject {
+class ImageCacheManager {
     
     // MARK: - Object Lifecycle
     static let sharedInstance = ImageCacheManager()
+    
+    private init () {}
     
     private let imageCache = AutoPurgingImageCache()
     

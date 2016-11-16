@@ -12,18 +12,24 @@
 import UIKit
 
 protocol ViewPhotosPresenterInput {
+    func presentSourceImage(withData data: Data)
     func presentPhotosFromSearch(response: ViewPhotos.SearchPhotos.Response)
 }
 
 protocol ViewPhotosPresenterOutput: class {
     func displayPhotoSearchServiceError(_ error : NSError)
     func displayResultsFromSearch(_ searchResults : ViewPhotos.SearchPhotos.SearchResults)
+    func displayDetailsView(for photo: Photo)
 }
 
 class ViewPhotosPresenter: ViewPhotosPresenterInput {
     weak var output: ViewPhotosPresenterOutput!
     
     // MARK: - Presentation logic
+    
+    func presentSourceImage(withData data: Data) {
+    
+    }
     
     func presentPhotosFromSearch(response: ViewPhotos.SearchPhotos.Response) {
         if let error = response.error {

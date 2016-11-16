@@ -12,30 +12,47 @@
 import UIKit
 
 protocol ViewPhotosInteractorInput {
-  func searchPhotosForTerm(request: ViewPhotos.SearchPhotos.Request)
+    func searchPhotosForTerm(request: ViewPhotos.SearchPhotos.Request)
+    func loadSourceImage(for photo: Photo)
 }
 
 protocol ViewPhotosInteractorOutput {
-  func presentPhotosFromSearch(response: ViewPhotos.SearchPhotos.Response)
+    func presentPhotosFromSearch(response: ViewPhotos.SearchPhotos.Response)
 }
 
 class ViewPhotosInteractor: ViewPhotosInteractorInput {
     
-  var output: ViewPhotosInteractorOutput!
-  var worker: FlickrPhotosWorker!
-  
-  // MARK: - Business logic
-  
-  func searchPhotosForTerm(request: ViewPhotos.SearchPhotos.Request) {
+    var output: ViewPhotosInteractorOutput!
+    var worker: FlickrPhotosWorker!
     
-    worker = FlickrPhotosWorker()
-    worker.searchPhotosForTerm(request.searchTerm) {
-        results, error in
+    // MARK: - Business logic
+    
+    func searchPhotosForTerm(request: ViewPhotos.SearchPhotos.Request) {
         
-        let response = ViewPhotos.SearchPhotos.Response(searchResults: results, error: error)
-        self.output.presentPhotosFromSearch(response: response)
+        worker = FlickrPhotosWorker()
+        worker.searchPhotosForTerm(request.searchTerm) {
+            results, error in
+            
+            let response = ViewPhotos.SearchPhotos.Response(searchResults: results, error: error)
+            self.output.presentPhotosFromSearch(response: response)
+        }
     }
-  }
+    
+    func loadSourceImage(for photo: Photo) {
+        if let sourceImageURL = photo.imageURL(.source) {
+//            self.imageView.af_setImage(withURL: sourceImageURL, imageTransition: .crossDissolve(0.4),
+//                                       completion: { (dataResponse) in
+//                                        if let imageData = dataResponse.data {
+//                                            let image = UIImage(data: imageData)
+//                                            self.imageView.image = image
+//                                            ImageCacheManager.sharedInstance.addImage(image!, forIdentifier:photo.imageURLString(.source))
+//                                            self.setZoomScale()
+//                                            self.updateImagePosition()
+//                                        }
+//                                        
+//            })
+        }
+    }
 }
 
 
