@@ -62,6 +62,31 @@ class FlickrPhotosWorker {
         }
     }
     
+    func loadSourceImageWithURLString(_ urlString: String, completion : @escaping (_ sourceImage: UIImage?, _ error : NSError?) -> Void) {
+        
+        if let cachedImage = ImageCacheManager.sharedInstance.fetchImageWithIdentifier(urlString) {
+            completion(cachedImage, nil)
+        } else {
+            let sourceImageURL = URL(string: urlString)!
+            Alamofire.request(sourceImageURL).responseData { response in
+                switch response.result {
+                case .success:
+                    if let imageData = response.data,
+                        let photoImage = UIImage(data: imageData) {
+                        completion(photoImage, nil)
+                        ImageCacheManager.sharedInstance.addImage(photoImage, forIdentifier:urlString)
+                    } else {
+                        let error = ErrorFactory.createErrorWithReason("Oh Snap!", description: "An error ocurred while loading this image!")
+                        completion(nil, error)
+                    }
+                case .failure:
+                    completion(nil, ErrorFactory.createServiceError())
+                }
+                
+            }
+        }
+    }
+    
     fileprivate func flickrSearchURLStringForSearchTerm(_ searchTerm:String) -> String? {
         
         guard let escapedTerm = searchTerm.addingPercentEncoding(withAllowedCharacters: CharacterSet.alphanumerics) else {

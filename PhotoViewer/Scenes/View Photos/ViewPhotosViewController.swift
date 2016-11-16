@@ -16,14 +16,15 @@ import AlamofireImage
 protocol ViewPhotosViewControllerInput
 {
     func displayPhotoSearchServiceError(_ error : NSError)
+    func displayPhotoLoadError(_ error : NSError)
     func displayResultsFromSearch(_ searchResults : ViewPhotos.SearchPhotos.SearchResults)
-    func displayDetailsView(for photo: Photo)
+    func displayDetailsView(for photoImage: UIImage)
 }
 
 protocol ViewPhotosViewControllerOutput
 {
     func searchPhotosForTerm(request: ViewPhotos.SearchPhotos.Request)
-    func loadSourceImage(for photo: Photo)
+    func loadSourceImage(request: ViewPhotos.ShowPhotoDetail.Request)
 }
 
 class ViewPhotosViewController: UICollectionViewController
@@ -131,7 +132,7 @@ extension ViewPhotosViewController : UICollectionViewDelegateFlowLayout {
         
         let screenSize = UIScreen.main.bounds.size
         let viewMinDimension = min(screenSize.width, screenSize.height)
-        let itemsPerRow : CGFloat = 3.0;
+        let itemsPerRow : CGFloat = 4.0;
         let paddingSpace = sectionInsets.left * (itemsPerRow + 1)
         let availableWidth = viewMinDimension - paddingSpace
         let widthPerItem = availableWidth / itemsPerRow
@@ -153,7 +154,9 @@ extension ViewPhotosViewController : UICollectionViewDelegateFlowLayout {
     override func collectionView(_ collectionView: UICollectionView,
                                  didSelectItemAt indexPath: IndexPath) {
         let photo = photoForIndexPath(indexPath)
-        self.output.loadSourceImage(for: photo)
+        PKHUD.sharedHUD.contentView = PKHUDProgressView(title: "Loading...", subtitle: "")
+        PKHUD.sharedHUD.show()
+        self.output.loadSourceImage(request: ViewPhotos.ShowPhotoDetail.Request(sourceURLString: photo.imageURLString(.source)))
     }
 }
 
@@ -181,14 +184,20 @@ extension ViewPhotosViewController : ViewPhotosViewControllerInput {
         router.showAlertForError(error)
     }
     
+    func displayPhotoLoadError(_ error : NSError) {
+        PKHUD.sharedHUD.hide(afterDelay: 1.0)
+        router.showAlertForError(error)
+    }
+    
     func displayResultsFromSearch(_ searchResults : ViewPhotos.SearchPhotos.SearchResults) {
         PKHUD.sharedHUD.hide(afterDelay: 1.0)
         self.searches.insert(searchResults, at: 0)
         self.collectionView?.reloadData()
     }
     
-    func displayDetailsView(for photo: Photo) {
-        self.router.showDetailScreenForPhoto(photo)
+    func displayDetailsView(for photoImage: UIImage) {
+        PKHUD.sharedHUD.hide()
+        self.router.showDetailScreenForPhoto(photoImage)
     }
 }
 

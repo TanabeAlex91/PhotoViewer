@@ -13,7 +13,7 @@ import UIKit
 
 protocol ViewPhotosRouterInput {
     func showAlertForError(_ error: NSError)
-    func showDetailScreenForPhoto(_ photo: Photo)
+    func showDetailScreenForPhoto(_ photoImage: UIImage)
 }
 
 class ViewPhotosRouter: ViewPhotosRouterInput {
@@ -26,10 +26,17 @@ class ViewPhotosRouter: ViewPhotosRouterInput {
         viewController.present(alertController, animated: true, completion: nil)
     }
     
-    func showDetailScreenForPhoto(_ photo: Photo) {
+    func showDetailScreenForPhoto(_ photoImage: UIImage) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let viewPhotoDetailViewController = storyboard.instantiateViewController(withIdentifier: "ViewPhotoDetailViewController") as! ViewPhotoDetailViewController
-        viewPhotoDetailViewController.displayedPhoto = photo
+        viewPhotoDetailViewController.photoSourceImage = photoImage
+        viewController.navigationController?.pushViewController(viewPhotoDetailViewController, animated: true)
+    }
+    
+    func showSharingPopoverForPhotoImage(_ photoImage: UIImage) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let viewPhotoDetailViewController = storyboard.instantiateViewController(withIdentifier: "ViewPhotoDetailViewController") as! ViewPhotoDetailViewController
+        viewPhotoDetailViewController.photoSourceImage = photoImage
         viewController.navigationController?.pushViewController(viewPhotoDetailViewController, animated: true)
     }
 }

@@ -11,24 +11,19 @@
 
 import UIKit
 
-protocol ViewPhotoDetailViewControllerInput {
-}
-
-protocol ViewPhotoDetailViewControllerOutput {
-}
-
-class ViewPhotoDetailViewController: UIViewController, ViewPhotoDetailViewControllerInput {
-    var output: ViewPhotoDetailViewControllerOutput!
-    var router: ViewPhotoDetailRouter!
+class ViewPhotoDetailViewController: UIViewController {
     
-    fileprivate var scrollView: UIScrollView!
+    @IBOutlet weak var scrollView: UIScrollView!
     fileprivate var imageView: UIImageView!
     
+    var router: ViewPhotoDetailRouter!
+
     var photoSourceImage : UIImage!
     
     // MARK: - Object lifecycle
     
-    override func awakeFromNib() {
+    override func awakeFromNib()
+    {
         super.awakeFromNib()
         ViewPhotoDetailConfigurator.sharedInstance.configure(viewController: self)
     }
@@ -39,45 +34,28 @@ class ViewPhotoDetailViewController: UIViewController, ViewPhotoDetailViewContro
         super.viewDidLoad()
         
         setupViews()
-        setupImage()
-        setZoomScale()
-        updateImagePosition()
         setupGestureRecognizer()
     }
     
-    override func viewWillLayoutSubviews() {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         setZoomScale()
-        updateImagePosition()
     }
     
     // MARK: - Display logic
     
     func setupViews() {
         self.imageView = UIImageView(image: self.photoSourceImage)
-        
-        self.scrollView = UIScrollView(frame: self.view.bounds)
-        self.scrollView.delegate = self
-        self.scrollView.backgroundColor = UIColor.cpBeige
-        self.scrollView.contentSize = self.imageView.bounds.size
-        self.scrollView.autoresizingMask = [.flexibleWidth , .flexibleHeight]
-        
         self.scrollView .addSubview(self.imageView)
-        view.addSubview(self.scrollView)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.action, target: self, action: #selector(ViewPhotoDetailViewController.share))
     }
     
-    func setupImage() {
-        if let photo = self.displayedPhoto {
-            if let sourceImage = ImageCacheManager.sharedInstance.fetchImageWithIdentifier(photo.imageURLString(.source)) {
-                self.imageView.image = sourceImage
-            } else {
-                if let thumbnailImage = ImageCacheManager.sharedInstance.fetchImageWithIdentifier(photo.imageURLString()) {
-                    self.imageView.image = thumbnailImage
-                }
-                
-                
-            }
-        }
+    // MARK: - IBActions
+    
+    @IBAction func share(_ sender: UIBarButtonItem) {
+        self.router.showSharePopupForPhotoImage(self.imageView.image!, from: sender)
     }
+
 }
 
 // MARK: - UIScrollViewDelegate
@@ -87,35 +65,34 @@ extension ViewPhotoDetailViewController: UIScrollViewDelegate {
     }
     
     func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        updateImagePosition()
+        updateScrollInset()
     }
 }
+
 
 // MARK: - Private
 extension ViewPhotoDetailViewController {
     
     // MARK: - Zoom Handling
     fileprivate func setZoomScale() {
-        let scrollViewSize = self.scrollView.bounds.size
-        let imageViewSize = self.imageView.bounds.size
-        let widthScale = scrollViewSize.width / imageViewSize.width
-        let heightScale = scrollViewSize.height / imageViewSize.height
-        
-        scrollView.minimumZoomScale = min(widthScale, heightScale)
-        scrollView.zoomScale = 1.0
+        if let size = imageView.image?.size {
+            let wrate = scrollView.frame.width / size.width
+            let hrate = scrollView.frame.height / size.height
+            let rate = min(wrate, hrate, 1)
+            imageView.frame.size = CGSize(width: size.width * rate, height: size.height * rate)
+            scrollView.contentSize = imageView.frame.size
+            updateScrollInset()
+        }
     }
     
-    fileprivate func updateImagePosition() {
-        
-        let imageViewSize = imageView.frame.size
-        let scrollViewSize = scrollView.bounds.size
-        
-        let verticalPadding = imageViewSize.height < scrollViewSize.height ? (scrollViewSize.height - imageViewSize.height) / 2 : 0
-        let horizontalPadding = imageViewSize.width < scrollViewSize.width ? (scrollViewSize.width - imageViewSize.width) / 2 : 0
-        
-        self.scrollView.contentInset = UIEdgeInsets(top: verticalPadding, left: horizontalPadding, bottom: verticalPadding, right: horizontalPadding)
+    fileprivate func updateScrollInset() {
+        scrollView.contentInset = UIEdgeInsetsMake(
+            max((scrollView.frame.height - imageView.frame.height)/2, 0),
+            max((scrollView.frame.width - imageView.frame.width)/2, 0),
+            0,
+            0
+        );
     }
-    
     
     //MARK: - Gesture Handling
     fileprivate func setupGestureRecognizer() {

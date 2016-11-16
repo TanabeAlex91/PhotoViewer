@@ -27,6 +27,17 @@ struct ViewPhotos {
             let resultPhotos : [Photo]
         }
     }
+    
+    struct ShowPhotoDetail {
+        struct Request {
+            var sourceURLString : String
+        }
+        
+        struct Response {
+            var sourceImage : UIImage?
+            var error : NSError?
+        }
+    }
 }
 
 

@@ -12,14 +12,15 @@
 import UIKit
 
 protocol ViewPhotosPresenterInput {
-    func presentSourceImage(withData data: Data)
+    func presentSourceImage(response: ViewPhotos.ShowPhotoDetail.Response)
     func presentPhotosFromSearch(response: ViewPhotos.SearchPhotos.Response)
 }
 
 protocol ViewPhotosPresenterOutput: class {
     func displayPhotoSearchServiceError(_ error : NSError)
+    func displayPhotoLoadError(_ error : NSError)
     func displayResultsFromSearch(_ searchResults : ViewPhotos.SearchPhotos.SearchResults)
-    func displayDetailsView(for photo: Photo)
+    func displayDetailsView(for photoImage: UIImage)
 }
 
 class ViewPhotosPresenter: ViewPhotosPresenterInput {
@@ -27,8 +28,13 @@ class ViewPhotosPresenter: ViewPhotosPresenterInput {
     
     // MARK: - Presentation logic
     
-    func presentSourceImage(withData data: Data) {
-    
+    func presentSourceImage(response: ViewPhotos.ShowPhotoDetail.Response) {
+        if let error = response.error {
+            self.output.displayPhotoSearchServiceError(error)
+            return
+        } else if let sourceImage = response.sourceImage {
+            self.output.displayDetailsView(for: sourceImage)
+        }
     }
     
     func presentPhotosFromSearch(response: ViewPhotos.SearchPhotos.Response) {

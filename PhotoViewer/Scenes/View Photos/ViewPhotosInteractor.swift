@@ -10,14 +10,16 @@
 //
 
 import UIKit
+import Alamofire
 
 protocol ViewPhotosInteractorInput {
     func searchPhotosForTerm(request: ViewPhotos.SearchPhotos.Request)
-    func loadSourceImage(for photo: Photo)
+    func loadSourceImage(request: ViewPhotos.ShowPhotoDetail.Request)
 }
 
 protocol ViewPhotosInteractorOutput {
     func presentPhotosFromSearch(response: ViewPhotos.SearchPhotos.Response)
+    func presentSourceImage(response: ViewPhotos.ShowPhotoDetail.Response)
 }
 
 class ViewPhotosInteractor: ViewPhotosInteractorInput {
@@ -38,8 +40,16 @@ class ViewPhotosInteractor: ViewPhotosInteractorInput {
         }
     }
     
-    func loadSourceImage(for photo: Photo) {
-        if let sourceImageURL = photo.imageURL(.source) {
+    func loadSourceImage(request: ViewPhotos.ShowPhotoDetail.Request) {
+        self.worker.loadSourceImageWithURLString(request.sourceURLString) {
+            photoImage, error in
+            
+            let response = ViewPhotos.ShowPhotoDetail.Response(sourceImage: photoImage, error: error)
+            self.output.presentSourceImage(response: response)
+        }
+        
+        
+        
 //            self.imageView.af_setImage(withURL: sourceImageURL, imageTransition: .crossDissolve(0.4),
 //                                       completion: { (dataResponse) in
 //                                        if let imageData = dataResponse.data {
@@ -51,7 +61,6 @@ class ViewPhotosInteractor: ViewPhotosInteractorInput {
 //                                        }
 //                                        
 //            })
-        }
     }
 }
 
