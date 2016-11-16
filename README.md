@@ -6,7 +6,7 @@ A simple photo viewer made in Swift 3.
 
 The following app is made only for demo purposes. No commercial use is intended.
 
-## Instalation
+## Installation
 
 This project uses CocoaPods as its package manager. Just go to the parent directory of your project from your terminal and install pods.
 
@@ -29,7 +29,7 @@ This project has been done in just 2 days, so it is limited to the following fea
 * Check your search results in different sections in a fancy UICollectionView
 * Tap a photo to see it in better quality and be able to share it.
 
-## Your project looks clean...
+## Your project looks *clean*...
 
 No. More than the UI, the aim of this project was to demonstrate one of the many types of structuring your project.
 As many of us are already used to MVC, I thought it would be better to use a new approach.
